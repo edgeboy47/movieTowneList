@@ -25,8 +25,13 @@ async function populateNowShowing(nowShowingMoviesArray){
     nowShowingMovies = await page.evaluate(() => Array.from(document.querySelectorAll('div.movie_thumbnail')).map( el => el.children[1].textContent));
 }
 
-function populateComingSoon(){
-
+async function populateComingSoon(){
+    const thumbnailSelector = 'div.movie_thumbnail';
+    await page.goto(`${comingSoonURL}${locationStrings.pos}`);
+    await page.waitForSelector(thumbnailSelector);
+    comingSoonMovies = await page.evaluate(() => Array.from(document.querySelectorAll('div.movie_thumbnail')).map( el => {
+        return `${el.children[1].textContent} - ${el.children[2].textContent}`
+    }));
 }
 
 async function init(){
@@ -41,8 +46,13 @@ async function end(){
 async function run(){
     await init();
     await populateNowShowing();
+    await populateComingSoon();
     await end();
-    sortList(nowShowingMovies).forEach(el => console.table(el));
+    
+    console.log('Now Showing');
+    sortList(nowShowingMovies).forEach(el => console.log(el));
+    console.log('Coming Soon');
+    sortList(comingSoonMovies).forEach(el => console.log(el));
 }
 
 // Removes duplicates and sorts list
