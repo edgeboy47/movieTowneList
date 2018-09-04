@@ -48,9 +48,10 @@ async function run(){
     await populateNowShowing();
     await populateComingSoon();
     await end();
-    
+
     console.log('Now Showing');
     sortList(nowShowingMovies).forEach(el => console.log(el));
+    console.log('');
     console.log('Coming Soon');
     sortList(comingSoonMovies).forEach(el => console.log(el));
 }
